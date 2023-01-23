@@ -5,6 +5,7 @@
 #include "shellcode-64.h"
 
 #define TARGET "../targets/target2"
+#define BUFFER_SIZE = 256
 
 int
 main ( int argc, char * argv[] )
