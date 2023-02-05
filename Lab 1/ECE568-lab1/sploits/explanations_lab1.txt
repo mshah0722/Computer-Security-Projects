@@ -7,7 +7,11 @@
 
 
 // Target 2 Explanation
-
+This is a buffer overflow vulnerability. A for loop in the function, foo, enables for the copying of 272 chars to a 256 size buffer. 
+For the exploit, we find the respective addresses of the buffer, return, i, and len using gdb and overwrite the values of i and len.
+In the attack buffer, we first fill it with NOPs and then write the first 45 bytes with shellcode. Indexes 264-267 are overwritten with the 
+address of i, indexes 268-271 are overwritten with the address of len and indexes 280-283 are overwritten with the return address. Index 284 is
+the null terminator. After the attack buffer encounters a null character, the environment variables are given in the argv variable. 
 
 
 // Target 3 Explanation
@@ -15,7 +19,11 @@
 
 
 // Target 4 Explanation
-
+This is a buffer overflow vulnerability. A for loop in the function, foo, enables for the copying of 169 chars to a 156 size buffer. 
+For the exploit, we find the respective addresses of the buffer, return, i, and len using gdb and overwrite the values of i and len.
+In the attack buffer, we first fill it with NOPs and then write the first 45 bytes with shellcode. Indexes 168-171 are overwritten with the 
+address of i, indexes 172-175 are overwritten with the address of len and indexes 184-187 are overwritten with the return address. Index 188 is
+the null terminator. Parts of the buffer are sent in with the env variables since several null characters are required.
 
 
 // Target 5 Explanation
