@@ -3,7 +3,11 @@
 
 
 // Target 1 Explanation
-
+This is a buffer overflow vulnerability. The buffer allows a space of 96 bytes, but foo uses strcpy to copy into the buffer where 
+buffer overflow occurs. For the exploit, we find the respective addresses of the buffer, and rip (program counter). The difference 
+between the rip (program counter) and the address of buf is 0x3021fec8 - 0x3021fe50 = 0x78 = 120 bytes. We fill the buffer with 120 
+bytes of shellcode, and No-OPs. Then 4 bytes of the return address of the start of the buffer (0x3021fe50), followed by a '\0'. 
+Once it gets to the Return Address, it will got to the return address of buffer (0x3021fe50), where the shellcode is executed.
 
 
 // Target 2 Explanation
@@ -15,8 +19,13 @@ the null terminator. After the attack buffer encounters a null character, the en
 
 
 // Target 3 Explanation
-
-
+This is a buffer overflow vulnerability. The buffer in foo allows a space of 64 bytes, but the bar function copies up to 88 bytes 
+into targ, which we can use for the exploit.  For the exploit, we find the respective addresses of the buffer, and rip 
+(program counter). The difference between the rip (program counter) and the address of buf is 0x3021fe98 - 0x3021fe50 = 0x48 = 72 bytes. 
+The first 4 bytes of targ are filled with "AAAA". Then, we fill the buffer with with 68 bytes of shellcode, and No-OPs. Followed by 
+4 bytes of the return address of buffer which was 0x3021fe50 + 4 = (0x3021fe54). We do this to ignore the first 4 bytes of "AAAA".
+This is followed by a '\0'. Once it gets to the Return Address, it will got to the return address of buffer (0x3021fe54) where the
+shellcode is stored and then executed.
 
 // Target 4 Explanation
 This is a buffer overflow vulnerability. A for loop in the function, foo, enables for the copying of 169 chars to a 156 size buffer. 
@@ -27,7 +36,8 @@ the null terminator. Parts of the buffer are sent in with the env variables sinc
 
 
 // Target 5 Explanation
-
+This target has a format string vulnerability. This vulnerability is present since there are two different types of information channels 
+being merged into one, and special escape characters or sequences are used to distinguish which channel is currently active.
 
 
 // Target 6 Explanation
