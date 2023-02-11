@@ -4,6 +4,8 @@
 
 #include "lib/sha1.h"
 
+#include "time.h"
+
 // Function to convert a char to int
 int to_int(char info) {
 	if (info >= 48 && info <= 57) {

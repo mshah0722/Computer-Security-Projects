@@ -44,7 +44,7 @@ main(int argc, char * argv[])
 	char secretHexConvert[17];
 
 	for (int i = 0; i < 10; i++) {
-		t[i] = to_int(16*secret_hex[i*2]+to_int(secret_hex[i*2+1]));
+		t[i] = 16 * to_int(secret_hex[i*2]) + to_int(secret_hex[i*2+1]);
 	}
 
 	assert(base32_encode(t, 10, secretHexConvert, 16) != -1);
