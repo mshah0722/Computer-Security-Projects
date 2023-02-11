@@ -5,6 +5,19 @@
 
 #include "lib/encoding.h"
 
+// Function to convert a char to int
+int to_int(char info) {
+	if (info >= 48 && info <= 57) {
+		return info - 48;
+	}
+	else if (info >= 65 && info <= 70) {
+		return info - 55;
+	}
+	else {
+		return 0;
+	}
+}
+
 int
 main(int argc, char * argv[])
 {
@@ -25,7 +38,26 @@ main(int argc, char * argv[])
 	// Create an otpauth:// URI and display a QR code that's compatible
 	// with Google Authenticator
 
-	displayQRcode("otpauth://testing");
+	// Encode the secret hex by using a for loop for uint8 for first 10 chars
+	// and then the given base32 function
+	uint8_t t[10];
+	char secretHexConvert[17];
+
+	for (int i = 0; i < 10; i++) {
+		t[i] = to_int(16*secret_hex[i*2]+to_int(secret_hex[i*2+1]));
+	}
+
+	assert(base32_encode(t, 10, secretHexConvert, 16) != -1);
+	secretHexConvert[16] = '\0';
+
+	// Chose arbitrary length for the URL... not sure if this is the best practice though
+	char url[300];
+
+	sprintf(url, "otpauth://totp/%s?issuer=%s&secret=%s&period=30", 
+		urlEncode(accountName), urlEncode(issuer),
+		secretHexConvert);
+
+	displayQRcode(url);
 
 	return (0);
 }
