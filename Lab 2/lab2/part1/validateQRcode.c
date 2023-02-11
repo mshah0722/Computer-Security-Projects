@@ -4,6 +4,18 @@
 
 #include "lib/sha1.h"
 
+// Function to convert a char to int
+int to_int(char info) {
+	if (info >= 48 && info <= 57) {
+		return info - 48;
+	}
+	else if (info >= 65 && info <= 70) {
+		return info - 55;
+	}
+	else {
+		return 0;
+	}
+}
 
 static int
 validateTOTP(char * secret_hex, char * TOTP_string)
