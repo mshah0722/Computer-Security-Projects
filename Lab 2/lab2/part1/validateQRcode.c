@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
-
+#include <stdlib.h>
 #include "lib/sha1.h"
 
 #include "time.h"
-#define FULL 0x00ff
+#define FULL 0x00FF
 
 // Function to convert a char to int
 int to_int(char info) {
@@ -33,18 +33,16 @@ validateTOTP(char * secret_hex, char * TOTP_string)
 	}
 
 	memset(innerKey, 0x36, 64);
-	memset(outerKey, 0x5c, 64);
+	memset(outerKey, 0x5C, 64);
 
 	// XOR the inner and outer keys respectively with the secret key
 	for (int i = 0; i < 64; i++) {
-		innerKey[i] = secretKey[i] ^ innerKey[i];
+		innerKey[i] ^= secretKey[i];
+                outerKey[i] ^= secretKey[i];
 	}
 
-	for (int i = 0; i < 64; i++) {
-                outerKey[i] = secretKey[i] ^ outerKey[i];
-        }
-
 	// Current UNIX time over the active period of the TOTP
+	// the value fixed for 30s each time
 	uint64_t timePeriod = time(NULL)/30;
 	
 	uint8_t message[8];
@@ -55,9 +53,32 @@ validateTOTP(char * secret_hex, char * TOTP_string)
 
 	// HMAC Calculation
 	SHA1_INFO ctx;
+	uint8_t innerSHA[SHA1_DIGEST_LENGTH];
+	sha1_init(&ctx);
+	sha1_update(&ctx, innerKey, 64);
+	sha1_update(&ctx, message, 8);
+   	sha1_final(&ctx, innerSHA);
 
+        uint8_t outerSHA[SHA1_DIGEST_LENGTH];
+        sha1_init(&ctx);
+        sha1_update(&ctx, outerKey, 64);
+        sha1_update(&ctx, innerSHA, SHA1_DIGEST_LENGTH);
+        sha1_final(&ctx, outerSHA);
 
-	return (0);
+	int offset = outerSHA[19] & 0xF;
+	int bin = (outerSHA[offset] & 0x7F) << 24
+		  | (outerSHA[offset + 1] & 0xFF) << 16
+		  | (outerSHA[offset + 2] & 0xFF) << 8
+		  | (outerSHA[offset + 3] & 0xFF);
+
+	int dividedTOTP = bin % 1000000;
+
+	if (dividedTOTP != atoi(TOTP_string)) {
+		return 0;
+	}
+	else {
+		return 1;
+	}
 }
 
 
