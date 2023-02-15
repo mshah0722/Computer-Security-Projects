@@ -24,7 +24,6 @@ class BioConnect:
 	bctoken			= ''
 	userId			= ''
 	authenticatorId		= ''
-	verificationId		= ''
 	stepupId		= ''
 
 	# ===== login: Authenticates and obtains access credentials
@@ -304,11 +303,11 @@ class BioConnect:
 			reply = json.loads(result.content.decode('utf-8'))
 
 			# Extract the verificationId from the authentication request
-			self.verificationId = reply.get("user_verification","")
+			verificationId = reply.get("user_verification","")
 
 			# Extract uuid from the verificationId
-			if self.verificationId:
-				self.stepupId = self.verificationId.get("uuid","")
+			if verificationId:
+				self.stepupId = verificationId.get("uuid","")
 				return(self.stepupId)
 			
 			return("")
@@ -354,12 +353,12 @@ class BioConnect:
 			reply = json.loads(result.content.decode('utf-8'))
 
 			# Extract the status of the verification request
-			self.verificationId = reply.get("user_verification","")
+			verificationId = reply.get("user_verification","")
 
 			# Extract uuid from the verificationId
-			if self.verificationId:
-				if self.verificationId["uuid"] == self.stepupId:
-					status = self.verificationId.get("status","")
+			if verificationId:
+				if verificationId["uuid"] == self.stepupId:
+					status = verificationId.get("status","")
 					return(status)
 			
 			return("pending")
