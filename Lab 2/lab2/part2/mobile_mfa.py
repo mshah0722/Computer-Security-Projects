@@ -24,6 +24,7 @@ class BioConnect:
 	bctoken			= ''
 	userId			= ''
 	authenticatorId		= ''
+	verificationId		= ''
 	stepupId		= ''
 
 	# ===== login: Authenticates and obtains access credentials
@@ -222,8 +223,42 @@ class BioConnect:
 		# >>> Add code here to call
 		#    .../v2/users/<userId>/authenicators/<authenticatorId>
 		# and process the response
+		
+		global hostname
 
-		return('')
+		url = 'https://%s/v2/users/%s/authenticators/%s' % (hostname, self.userId, self.authenticatorId)
+
+		headers = {
+			'Content-Type':		'application/json',
+			'accept':		'application/json',
+			'bcaccesskey':		self.bcaccesskey,
+			'bcentitykey':		self.bcentitykey,
+			'bctoken':		self.bctoken
+		}
+
+		# Send our GET request to the server
+		result = requests.get(url, headers=headers)
+
+		if result == False:
+			# Error: we did not receive an HTTP/200
+			print(headers)
+			print(result.content)
+			sys.exit("Error: unable to connect to the server")
+
+		try:
+			# The API call returns a JSON structure
+			# Parse the JSON reply that describes the status of the mobile device
+			reply = json.loads(result.content.decode('utf-8'))
+
+			# Extract the status of the authenticator
+			status = reply.get("status","")
+			return(status)
+			
+		except ValueError:
+			# The API call returned an error
+			print(headers)
+			print(result.content)
+			sys.exit("Error: unexpected reply from the server")
 
 
 	# ===== sendStepup: Pushes an authentication request to the mobile app
@@ -236,7 +271,53 @@ class BioConnect:
 		#     .../v2/user_verifications
 		# to push an authentication request to the mobile device
 
-		pass
+		global	hostname
+
+		url = 'https://%s/v2/user_verifications' % hostname
+
+		headers = {
+			'Content-Type':		'application/json',
+			'accept':		'application/json',
+			'bcaccesskey':		self.bcaccesskey,
+			'bcentitykey':		self.bcentitykey,
+			'bctoken':		self.bctoken
+		}
+
+		data = {
+			'user_uuid':	self.userId,
+			'transaction_id':	transactionId,
+			'message':		"Login request"
+		}
+
+		# Send our POST request to the server
+		result = requests.post(url, data=json.dumps(data), headers=headers)
+
+		if result == False:
+			# Error: we did not receive an HTTP/200
+			print(headers)
+			print(result.content)
+			sys.exit("Error: unable to post to the server")
+
+		try:
+			# The API call returns a JSON structure
+			# Parse the JSON reply that describes the authentication request that was created with the verificationId
+			reply = json.loads(result.content.decode('utf-8'))
+
+			# Extract the verificationId from the authentication request
+			self.verificationId = reply.get("user_verification","")
+
+			# Extract uuid from the verificationId
+			if self.verificationId:
+				self.stepupId = self.verificationId.get("uuid","")
+				return(self.stepupId)
+			
+			return("")
+
+		except ValueError:
+			# The API call returned an error
+			print(headers)
+			print(result.content)
+			sys.exit("Error: unexpected reply from the server")
 
 	# ===== getStepupStatus: Fetches the status of the user auth request
 
@@ -246,7 +327,48 @@ class BioConnect:
 		#     .../v2/user_verifications/<verificationId>
 		# to poll for the current status of the verification
 
-		return('declined')
+		global	hostname
+
+		url = 'https://%s/v2/user_verifications/%s' % (hostname, self.stepupId)
+
+		headers = {
+			'Content-Type':		'application/json',
+			'accept':		'application/json',
+			'bcaccesskey':		self.bcaccesskey,
+			'bcentitykey':		self.bcentitykey,
+			'bctoken':		self.bctoken
+		}
+
+		# Send our GET request to the server
+		result = requests.get(url, headers=headers)
+
+		if result == False:
+			# Error: we did not receive an HTTP/200
+			print(headers)
+			print(result.content)
+			sys.exit("Error: unable to connect to the server")
+
+		try:
+			# The API call returns a JSON structure
+			# Parse the JSON reply that describes the status of the verification request
+			reply = json.loads(result.content.decode('utf-8'))
+
+			# Extract the status of the verification request
+			self.verificationId = reply.get("user_verification","")
+
+			# Extract uuid from the verificationId
+			if self.verificationId:
+				if self.verificationId["uuid"] == self.stepupId:
+					status = self.verificationId.get("status","")
+					return(status)
+			
+			return("pending")
+
+		except ValueError:
+			# The API call returned an error
+			print(headers)
+			print(result.content)
+			sys.exit("Error: unexpected reply from the server")
 
 
 	# ===== deleteUser: Deletes the user and mobile phone entries
