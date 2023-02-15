@@ -1,4 +1,16 @@
 #Malhar Shah, 1004926912, malhar.shah@mail.utoronto.ca
 #Shadman Kaif, 1005303137, shadman.kaif@mail.utoronto.ca
 
+// Generate QR Code Explanation
+A secret key is encoded in a special URI using the sprintf function in C.
+The three parameters filled are: account name and issuer, which can be passed in using the urlEncode function and the secret key which is encoded in base-32,
+first being converted from hex to binary array and then to base-32.
 
+// Validate QR Code Explanation
+This code generates the TOTP value from the secret and then verifies whether the user has provided correct values.
+We first XOR the inner and outer pads respectively with the secret key, which is a 10-bit hex. 
+Then, calculate the message from the current UNIX time over the active period of the TOTP.
+Also, we calculate the HMAC using the SHA1 update functions. Finally, after finding the offset and bin from the outer SHA,
+we convert the selected bytes to an integer and compare it to the input TOTP string; if they are equal, it is valid, and it is invalid otherwise.
+
+// Mobile MFA Explanation
