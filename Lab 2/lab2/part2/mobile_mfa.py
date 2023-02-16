@@ -329,6 +329,7 @@ class BioConnect:
 		global	hostname
 
 		url = 'https://%s/v2/user_verifications/%s' % (hostname, self.stepupId)
+		#print(url)
 
 		headers = {
 			'Content-Type':		'application/json',
@@ -359,8 +360,10 @@ class BioConnect:
 			if verificationId:
 				if verificationId["uuid"] == self.stepupId:
 					status = verificationId.get("status","")
+					#print(status)
 					return(status)
 			
+			#print("pending")
 			return("pending")
 
 		except ValueError:

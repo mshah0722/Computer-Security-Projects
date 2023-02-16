@@ -14,3 +14,4 @@ Also, we calculate the HMAC using the SHA1 update functions. Finally, after find
 we convert the selected bytes to an integer and compare it to the input TOTP string; if they are equal, it is valid, and it is invalid otherwise.
 
 // Mobile MFA Explanation
+In the three functions, we initially send a GET/POST request to the authenticators URL to check if we can connect to the server. In each request, we pass in the API keys in the headers, and for the POST request we also pass in additional data such as the userID, transactionID, and message in the header. If there's an error we exit from the functions, otherwise, we unpack the reply and parse the JSON reply. For each status extraction, we get the status from the reply, otherwise for sendStepup, we extract uuid from the verificationID and store it in stepupId and return it.
