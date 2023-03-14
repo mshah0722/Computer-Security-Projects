@@ -1,0 +1,13 @@
+#webgoat
+#Mon Mar 13 22:20:23 EDT 2023
+phishingUsername=username
+Phishing\ with\ XSS.viewedLessonPlan=false
+Phishing\ with\ XSS.completed=false
+Phishing\ with\ XSS.maxHintLevel=0
+Phishing\ with\ XSS.numVisits=11
+phishingPassword=password
+Phishing\ with\ XSS.viewedParameters=false
+Phishing\ with\ XSS.viewedSource=false
+Phishing\ with\ XSS.viewedHtml=false
+Phishing\ with\ XSS.viewedCookies=false
+PROPERTY=yes
