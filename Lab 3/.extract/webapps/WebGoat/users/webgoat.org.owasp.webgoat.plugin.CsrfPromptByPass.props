@@ -1,10 +1,10 @@
 #webgoat
-#Mon Mar 13 22:20:34 EDT 2023
+#Mon Mar 13 22:22:32 EDT 2023
 CSRF\ Prompt\ By-Pass.viewedHtml=false
 CSRF\ Prompt\ By-Pass.viewedSource=false
 CSRF\ Prompt\ By-Pass.viewedCookies=false
-CSRF\ Prompt\ By-Pass.numVisits=49
+CSRF\ Prompt\ By-Pass.numVisits=50
 CSRF\ Prompt\ By-Pass.viewedParameters=false
 CSRF\ Prompt\ By-Pass.maxHintLevel=0
 CSRF\ Prompt\ By-Pass.viewedLessonPlan=false
-CSRF\ Prompt\ By-Pass.completed=true
+CSRF\ Prompt\ By-Pass.completed=false
