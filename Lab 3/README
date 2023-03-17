@@ -1,2 +1,30 @@
 #Malhar Shah, 1004926912, malhar.shah@mail.utoronto.ca
 #Shadman Kaif, 1005303137, shadman.kaif@mail.utoronto.ca
+
+// Part 1 
+The vulnerability is that the search box on the page could be used to introduce malicious HTML code. In this example, a fake login and password prompt is loaded for the user. Erroneously, the user will enter their username and password to this login, believing that it is required to proceed. However, their login credentials will be sent directly to the attacker. An onclick Javacript function call achieves this.
+
+// Part 2
+
+
+// Part 3 
+The vulnerability is that it will include a picture whose URL leads to a malicious request. The image will load and a transfer will start once the user opens the message. A one-line Javascript image upload is enough to spark this vulnerability.
+
+The URL has Screen=1430709817 and menu=900. After the user opens the image, the URL will transfer 5000 dollars from the user.
+
+// Part 4
+
+
+// Part 5
+The vulnerability is that the transaction token will be returned as it appears in the HTML page.
+The transfer URL would be the first place the message would go. The token value could be found on that website when the URL was accessed. The transfer would subsequently be completed by changing this URL to another URL that contained the token value and transfer value. We used two "iframes" to exploit this vulnerability. 
+
+// Part 6
+
+
+// Part 7
+This is a SQL Injection vulnerability as queries can be interfered with. 
+The first part selects user 101 and updates their salary to $999 using a simple SQL command.
+The second part inserts a database trigger which remains installed inside the database and will change the database for us automatically. For this example, we simply change the email of the user to "ece568_22s@utoronto.ca". 
+
+// Part 8
