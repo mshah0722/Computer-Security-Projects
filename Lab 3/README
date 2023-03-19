@@ -5,7 +5,9 @@
 The vulnerability is that the search box on the page could be used to introduce malicious HTML code. In this example, a fake login and password prompt is loaded for the user. Erroneously, the user will enter their username and password to this login, believing that it is required to proceed. However, their login credentials will be sent directly to the attacker. An onclick Javacript function call achieves this.
 
 // Part 2
-
+In this part, the CC Number is stored in input1, and 3 digit access is in input2.
+The script I wrote will use vulnerability in input2 that will phish for the CC Number once the user clicks the buy button. 
+This is because of the onclick function runs the hack() function that runs this logic to store the CC Number.
 
 // Part 3 
 The vulnerability is that it will include a picture whose URL leads to a malicious request. The image will load and a transfer will start once the user opens the message. A one-line Javascript image upload is enough to spark this vulnerability.
@@ -13,7 +15,10 @@ The vulnerability is that it will include a picture whose URL leads to a malicio
 The URL has Screen=1430709817 and menu=900. After the user opens the image, the URL will transfer 5000 dollars from the user.
 
 // Part 4
-
+This part is simmilar to part 3. 
+The first line for the image will load and a transfer will start once the user opens the message.
+The second image will load after to make sure that the promt confirmation will load right after the transfer request.
+This will set the transfer value to confirmed for promt by-passing.
 
 // Part 5
 The vulnerability is that the transaction token will be returned as it appears in the HTML page.
