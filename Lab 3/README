@@ -1,6 +1,10 @@
 #Malhar Shah, 1004926912, malhar.shah@mail.utoronto.ca
 #Shadman Kaif, 1005303137, shadman.kaif@mail.utoronto.ca
 
+////Important Note:
+Part 1, 3, 5, 7 were done on Port 8090
+Part 2, 4, 6, 8 were done on Port 2722
+
 // Part 1 
 The vulnerability is that the search box on the page could be used to introduce malicious HTML code. In this example, a fake login and password prompt is loaded for the user. Erroneously, the user will enter their username and password to this login, believing that it is required to proceed. However, their login credentials will be sent directly to the attacker. An onclick Javacript function call achieves this.
 
