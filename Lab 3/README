@@ -55,5 +55,5 @@ The first query I used was:
 Here I started with a large number, then dwindled down, until I got the message that the Account number is valid.
 
 Finally when I narrowed it between the range of 3315 to 3320, I replaced the > with = in the query to get the pin.
-101 AND ((SELECT pin FROM credit WHERE cc_number = '1234123412341234') = 3319);
-This was the final query used which returned true, meaning that the pin in table credit for the row with the cc_number of 1234123412341234 is 3319.
+101 AND ((SELECT pin FROM credit WHERE cc_number = '1234123412341234') = 3318);
+This was the final query used which returned true, meaning that the pin in table credit for the row with the cc_number of 1234123412341234 is 3318.
