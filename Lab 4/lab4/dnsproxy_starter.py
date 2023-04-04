@@ -18,3 +18,28 @@ dns_port = args.dns_port
 # Flag to indicate if the proxy should spoof responses
 SPOOF = args.spoof_response
 
+# BIND's host
+host = "127.0.0.1"
+
+# Buffer Size Initialization
+BUFF_SIZE = 4096
+
+print("The port is: ", port)
+print("The DNS port is: ", dns_port)
+
+def clientSide(data):
+    clientUDPSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        serverSend = clientUDPSocket.sendto(data, (host, dns_port))
+        datarecv, server = clientUDPSocket.recvfrom(BUFF_SIZE)
+    finally:
+	clientUDPSocket.close()
+
+def serverSide():
+    serverTCPSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    serverTCPSocket.bind((host, port))
+    data, address = serverTCPSocket.recvfrom(BUFF_SIZE)
+    dataReceivedBack = client(data)
+    serverSend = sock.sendto(dataReceivedBack, address)
+
+serverSide()
