@@ -11,19 +11,18 @@
 
 
 // Part 2 Explanation
+First, using the port specified in the dig command, we generated a socket listening on connections from the command. To connect to the BIND server, we also opened another socket. We use the BIND socket to forward messages to the BIND server whenever we receive a request from the dig socket. When the BIND server responds with an answer, we use the dig socket to relay it back to the dig command.
 
+How to run Part 2 on three different terminals:
+./run_bind.sh
+python2 dnsproxy_starter.py --port 9145 --dns_port 12729
+dig @127.0.0.1 -p 9145 utoronto.ca
 
 // Part 3 Explanation
 
 
 // Part 4 Explanation
-
-
-
-How to run Part 3:
-./run_bind.sh
-python2 dnsproxy_starter.py --port 9145 --dns_port 12729
-dig @127.0.0.1 -p 9145 utoronto.ca
+I first issued a request for a typical reply packet for example.com in order to carry out the DNS cache poisoning attack. The BIND server's listen-on port received a fake DNS request for an invalid name in example.com. In the meantime, I created a response packet that I falsified, changing the name server's IP to ns.dnslabattacker.net, then flooded the BIND server's query-source port with it. Each of these fake responses had a separate transaction ID. I kept going through the above steps till I succeeded.
 
 How to run Part 4:
 ./run_bind.sh
