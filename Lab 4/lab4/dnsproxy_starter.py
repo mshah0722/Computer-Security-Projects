@@ -27,19 +27,34 @@ BUFF_SIZE = 4096
 print("The port is: ", port)
 print("The DNS port is: ", dns_port)
 
-def clientSide(data):
-    clientUDPSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        serverSend = clientUDPSocket.sendto(data, (host, dns_port))
-        datarecv, server = clientUDPSocket.recvfrom(BUFF_SIZE)
-    finally:
-	clientUDPSocket.close()
+if __name__ == "__main__":
+    # Create sockets for the Client and Server side
+    serverSide = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    clientSide = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    serverAddress = (host, port)
+    serverSide.bind(serverAddress)
 
-def serverSide():
-    serverTCPSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    serverTCPSocket.bind((host, port))
-    data, address = serverTCPSocket.recvfrom(BUFF_SIZE)
-    dataReceivedBack = client(data)
-    serverSend = sock.sendto(dataReceivedBack, address)
-
-serverSide()
+    # Infinitely listen to connections
+    while (True):
+        # Receive data and the address of dig 
+        data, digAddress = serverSide.recvfrom(BUFF_SIZE)
+        # Check if we are actually getting data or not
+        if (len(data) == 0):
+            print("Dig provides zero data.")
+            exit(1)
+        else:
+            print("Successfuly received non-zero data from dig.")
+        # Forward the data to the BIND
+        clientAddress = (host, dns_port)
+        clientSide.sendto(data, clientAddress)
+        print("Forwarded data to bind.")
+        # Listen for response from Bind
+        responseBind = clientSide.recv(BUFF_SIZE)
+        if (len(responseBind) == 0):
+            print("Bind provides zero data.")
+            exit(1)
+        else:
+            print("Successfuly received non-zero data from bind.")
+        # Reply to dig
+        serverSide.sendto(bytes(responseBind), digAddress)
+        print("Successfully replied back to dig.")
