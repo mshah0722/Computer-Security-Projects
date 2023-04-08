@@ -19,3 +19,13 @@
 // Part 4 Explanation
 
 
+
+How to run Part 3:
+./run_bind.sh
+python2 dnsproxy_starter.py --port 9145 --dns_port 12729
+dig @127.0.0.1 -p 9145 utoronto.ca
+
+How to run Part 4:
+./run_bind.sh
+./part4_starter.py --ip 127.0.0.1 --port 12729 --query_port 12278
+Verify with: dig @127.0.0.1 NS example.com -p 12729
