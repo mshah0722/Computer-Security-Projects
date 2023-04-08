@@ -2,9 +2,10 @@
 #Shadman Kaif, 1005303137, shadman.kaif@mail.utoronto.ca
 
 ----- NOTE -----
-<RNDC port number> = 2727
-<query port> = 2728
-<NAMED port number> = 2729
+<RNDC port number in rndc.conf> = 12726
+<query port> = 12728
+<listen on port> = 12729
+<RNDC port number in named.conf> = 12727
 
 // Part 1 Explanation
 
@@ -16,3 +17,5 @@
 
 
 // Part 4 Explanation
+
+
