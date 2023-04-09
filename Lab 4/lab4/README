@@ -8,7 +8,16 @@
 <RNDC port number in named.conf> = 12727
 
 // Part 1 Explanation
-
+1. I used this command: "dig ecf.utoronto.ca" to query the IPv4 address of ecf.utoronto.ca.
+2. I used this command: "dig ecf.utoronto.ca NS" to query the name servers of ecf.utoronto.ca. This returned two ns#.utoronto.ca name servers, 
+    which are the name servers of ecf.utoronto.ca.
+3. I used this command: "dig ecf.utoronto.ca MX" to get the name of the mail server: ecf-utoronto-ca.mail.protection.outlook.com. 
+    Now I used this command: "dig ecf-utoronto-ca.mail.protection.outlook.com" to get the IP addresses of each of the 2 mail servers.
+4. For this part, I added these parameters "@127.0.0.1 -p <BIND listen on port>" to each of the earlier commands in order to direct it to the BIND server:
+    "dig @127.0.0.1 -p 12729 ecf.utoronto.ca"
+    "dig @127.0.0.1 -p 12729 ecf.utoronto.ca NS"
+    "dig @127.0.0.1 -p 12729 ecf.utoronto.ca MX"
+    "dig @127.0.0.1 -p 12729 ecf-utoronto-ca.mail.protection.outlook.com"
 
 // Part 2 Explanation
 First, using the port specified in the dig command, we generated a socket listening on connections from the command. To connect to the BIND server, we also opened another socket. We use the BIND socket to forward messages to the BIND server whenever we receive a request from the dig socket. When the BIND server responds with an answer, we use the dig socket to relay it back to the dig command.
