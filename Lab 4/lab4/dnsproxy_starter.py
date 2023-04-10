@@ -57,6 +57,8 @@ if __name__ == "__main__":
             print("Successfuly received non-zero data from bind.")
             
         if SPOOF:
+            print("Spoofing")
+            
             # Use the proxy created in Part 2 to intercept and forge DNS replies
             responseBind = DNS(responseBind)
             
