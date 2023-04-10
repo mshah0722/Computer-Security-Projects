@@ -28,7 +28,8 @@ python2 dnsproxy_starter.py --port 9145 --dns_port 12729
 dig @127.0.0.1 -p 9145 utoronto.ca
 
 // Part 3 Explanation
-
+In this section, once I received the responses, I would first intercept and forge DNS replies using the proxy created in part 2. Then I modified change the IP address to 1.2.3.4 instead. 
+Then I changed the contents of name servers to be "ns.dnslabattacker.net" and "ns.dnslabattacker.net". Lastly, I sent it to the client, the dig command.
 
 // Part 4 Explanation
 I first issued a request for a typical reply packet for example.com in order to carry out the DNS cache poisoning attack. The BIND server's listen-on port received a fake DNS request for an invalid name in example.com. In the meantime, I created a response packet that I falsified, changing the name server's IP to ns.dnslabattacker.net, then flooded the BIND server's query-source port with it. Each of these fake responses had a separate transaction ID. I kept going through the above steps till I succeeded.
